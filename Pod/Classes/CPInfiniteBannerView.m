@@ -231,9 +231,9 @@
                 self.pageControl.hidden = NO;
             }
         });
-    }else if ([imageData isKindOfClass:[NSString class]]){
+    }else if ([imageData isKindOfClass:[NSURL class]]){
         @weakify(self);
-        [self downloadImageWithUrl:imageData relatedLink:imageData downloadImageCallBack:^(UIImage *image, NSString *link) {
+        [self downloadImageWithUrl:imageData relatedLink:[imageData absoluteString] downloadImageCallBack:^(UIImage *image, NSString *link) {
             @strongify(self);
             if (image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -369,15 +369,15 @@
 
 #pragma mark - download image
 
-- (void)downloadImageWithUrl:(NSString *)url
+- (void)downloadImageWithUrl:(NSURL *)url
                  relatedLink:(NSString *)relatedlink
        downloadImageCallBack:(void (^)(UIImage *image,NSString *link))block {
-    if (url && ([url isKindOfClass:[NSString class]] && [url length])) {
-        [[SDImageCache sharedImageCache] queryDiskCacheForKey:url done:^(UIImage *image, SDImageCacheType cacheType) {
+    if (url && ([url isKindOfClass:[NSURL class]])) {
+        [[SDImageCache sharedImageCache] queryDiskCacheForKey:url.absoluteString done:^(UIImage *image, SDImageCacheType cacheType) {
             if (!image) {
-                [[SDWebImageManager sharedManager] downloadImageWithURL:[NSURL URLWithString:url] options:SDWebImageProgressiveDownload progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                [[SDWebImageManager sharedManager] downloadImageWithURL:url options:SDWebImageProgressiveDownload progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
                     if (finished) {
-                        [[SDWebImageManager sharedManager] saveImageToCache:image forURL:[NSURL URLWithString:url]];
+                        [[SDWebImageManager sharedManager] saveImageToCache:image forURL:url];
                         CP_SafeBlockRun(block,image,relatedlink?:@"");
                     }
                 }];
@@ -387,5 +387,6 @@
         }];
     }
 }
+
 
 @end
