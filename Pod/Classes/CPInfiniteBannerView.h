@@ -8,7 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^CPInfiniteBannerResponseBlock)(NSString * link, NSUInteger selectedIndex);
+/**
+ *  link, the image url string, if the source is a image, return a @""
+ *  selectedIndex, the index of the clicked image
+ *  imageView, clicked imageview, you can use it to write a animation maybe :]
+ */
+typedef void (^CPInfiniteBannerResponseBlock)(NSString * link, NSUInteger selectedIndex, UIImageView *imageView);
 
 typedef NS_ENUM(NSUInteger, CPInfiniteBannerPageContolAliment) {
     CPInfiniteBannerPageContolAlimentRight = 0,
@@ -19,19 +24,19 @@ typedef NS_ENUM(NSUInteger, CPInfiniteBannerPageContolAliment) {
 
 @interface CPInfiniteBannerView : UIControl
 
-//placeholder of banner
+// placeholder of banner
 @property (nonatomic, strong) UIImage                       *placeHolder;
 
-//image arrays of banner
+// image arrays of banner
 @property (nonatomic, strong) NSMutableArray                *imageArray;
 
-//duration of auto scroll, default is 3
+// duration of auto scroll, default is 3
 @property (nonatomic, assign) CFTimeInterval                duration;
 
-//enable auto scroll, default is Yes
+// enable auto scroll, default is Yes
 @property (nonatomic, assign) BOOL enableAutoScroll;
 
-//page contol aliment, default is CPInfiniteBannerPageContolAlimentRight
+// page contol aliment, default is CPInfiniteBannerPageContolAlimentRight
 @property (nonatomic, assign) CPInfiniteBannerPageContolAliment pageContolAliment;
 
 // scrollview to contol the images
@@ -39,6 +44,9 @@ typedef NS_ENUM(NSUInteger, CPInfiniteBannerPageContolAliment) {
 
 // you can cutom the pagecontol props
 @property (nonatomic, strong, readonly) UIPageControl                 *pageControl;
+
+// image click block
+@property (nonatomic, copy  ) CPInfiniteBannerResponseBlock responseBlock;
 
 /**
  *  init method

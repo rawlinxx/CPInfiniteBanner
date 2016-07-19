@@ -25,7 +25,6 @@
 @property (nonatomic, strong) UIScrollView                  *scrollView;
 @property (nonatomic, strong) UIPageControl                 *pageControl;
 @property (nonatomic, strong) NSTimer                       *timer;
-@property (nonatomic, copy  ) CPInfiniteBannerResponseBlock responseBlock;
 @property (nonatomic, weak  ) UIView                        *container;
 @end
 
@@ -280,7 +279,7 @@
         
         if (_responseBlock) {
             if (itemView.link && [itemView.link length]) {
-                CP_SafeBlockRun(_responseBlock,itemView.link,page);
+                CP_SafeBlockRun(_responseBlock,itemView.link,page,itemView.imageView);
             }
         }
     }
