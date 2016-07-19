@@ -43,8 +43,8 @@ Pod::Spec.new do |s|
   s.frameworks = 'UIKit', 'Foundation'
 
   # Uncomment following lines if CPInfiniteBanner depends on any public or private pod.
-  s.dependency 'libextobjc', '~> 0.4.1'
-  s.dependency 'SDWebImage','~>3.7.2'
-  s.dependency 'Masonry','~>0.6.3'
+  s.dependency 'libextobjc'
+  s.dependency 'SDWebImage'
+  s.dependency 'Masonry'
 
 end
