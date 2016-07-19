@@ -280,7 +280,7 @@
         
         if (_responseBlock) {
             if (itemView.link && [itemView.link length]) {
-                CP_SafeBlockRun(_responseBlock,itemView.link);
+                CP_SafeBlockRun(_responseBlock,itemView.link,page);
             }
         }
     }

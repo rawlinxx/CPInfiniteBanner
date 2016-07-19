@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^CPInfiniteBannerResponseBlock)(NSString * link);
+typedef void (^CPInfiniteBannerResponseBlock)(NSString * link, NSUInteger selectedIndex);
 
 typedef NS_ENUM(NSUInteger, CPInfiniteBannerPageContolAliment) {
     CPInfiniteBannerPageContolAlimentRight = 0,
