@@ -11,6 +11,7 @@
 
 
 @interface CPViewController ()
+@property (weak, nonatomic) IBOutlet CPInfiniteBannerView *banner;
 
 @end
 
@@ -22,20 +23,23 @@
     self.view.backgroundColor = [UIColor lightGrayColor];
     
     NSArray *array = @[[NSURL URLWithString:@"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg"],
-                        [NSURL URLWithString:@"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg"],
+//                        [NSURL URLWithString:@"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg"],
                         [UIImage imageNamed:@"2.jpg"]];
     
-    
-    CPInfiniteBannerView *banner = [[CPInfiniteBannerView alloc]initWithContainerView:self.view responseBlock:^(NSString *link, NSUInteger index) {
-        NSLog(@"the link of the image you pressed is %@",link);
-    }];
-    banner.frame = CGRectMake(20, 30, self.view.frame.size.width-40, 90);
-    banner.placeHolder = [UIImage imageNamed:@"3.jpg"];
-    banner.duration = 3.0;
-    banner.enableAutoScroll = NO;
-    banner.pageContolAliment = CPInfiniteBannerPageContolAlimentLeft;
-    banner.pageControl.currentPageIndicatorTintColor = [UIColor blueColor];
-    banner.imageArray = [NSMutableArray arrayWithArray:array];
+    self.banner.placeHolder = [UIImage imageNamed:@"3.jpg"];
+    self.banner.enableAutoScroll = YES;
+    [self.banner setImageArray:[NSMutableArray arrayWithArray:array]];
+
+//    CPInfiniteBannerView *banner = [[CPInfiniteBannerView alloc]initWithContainerView:self.view responseBlock:^(NSString *link, NSUInteger index) {
+//        NSLog(@"the link of the image you pressed is %@",link);
+//    }];
+//    banner.frame = CGRectMake(20, 30, self.view.frame.size.width-40, 90);
+//    banner.placeHolder = [UIImage imageNamed:@"3.jpg"];
+//    banner.duration = 3.0;
+//    banner.enableAutoScroll = NO;
+//    banner.pageContolAliment = CPInfiniteBannerPageContolAlimentLeft;
+//    banner.pageControl.currentPageIndicatorTintColor = [UIColor blueColor];
+//    banner.imageArray = [NSMutableArray arrayWithArray:array];
 }
 
 - (void)didReceiveMemoryWarning {

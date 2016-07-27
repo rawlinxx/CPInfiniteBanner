@@ -26,6 +26,7 @@
 @property (nonatomic, strong) UIPageControl                 *pageControl;
 @property (nonatomic, strong) NSTimer                       *timer;
 @property (nonatomic, weak  ) UIView                        *container;
+
 @end
 
 
@@ -82,6 +83,11 @@
     _enableAutoScroll = YES;
     _pageContolAliment = CPInfiniteBannerPageContolAlimentRight;
     [self makeConstraints];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self setImageArray:_imageArray];
 }
 
 #pragma mark - lazy load
@@ -171,15 +177,16 @@
         //首尾各加一张图片
         self.pageControl.hidden = YES;
         self.scrollView.contentSize	 = CGSizeMake(ITEM_WIDTH * (_imageArray.count+2), self.frame.size.height);
+        
+        //set head view
+        NSInteger tag_head = 99;
+        [self buildSubViewOfScrollViewWithTag:tag_head andImageData:[_imageArray lastObject]];
+        
         //set center view
         for (NSInteger i = 0; i < _imageArray.count; i ++) {
             NSInteger tag = 100+i;
             [self buildSubViewOfScrollViewWithTag:tag andImageData:[_imageArray objectAtIndex:i]];
         }
-        
-        //set head view
-        NSInteger tag_head = 99;
-        [self buildSubViewOfScrollViewWithTag:tag_head andImageData:[_imageArray lastObject]];
         
         //set tail view
         NSInteger tag_tail = 100 + [_imageArray count];
@@ -219,7 +226,16 @@
                                    CGRectMake(ITEM_WIDTH * position, 0, ITEM_WIDTH, self.frame.size.height)
                                                                                        placeHolder:_placeHolder];
     singleItemView.tag = tag;
+    
+    UIView *lastView = self.scrollView.subviews.lastObject;
+    
     [self.scrollView addSubview:singleItemView];
+    
+    [singleItemView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(self.mas_width);
+        make.height.equalTo(self.mas_height);
+        make.left.equalTo(position == 0?self.scrollView:lastView.mas_right);
+    }];
     
     
     if ([imageData isKindOfClass:[UIImage class]]) {
@@ -251,9 +267,6 @@
     self.pageControl.numberOfPages = [_imageArray count];
     self.pageControl.currentPage = 0;
     [self scrollToIndex:0];
-    CGFloat targetX = self.scrollView.contentOffset.x + self.scrollView.frame.size.width;
-    targetX = (NSInteger)(targetX/ITEM_WIDTH) * ITEM_WIDTH;
-    [self.scrollView setContentOffset:CGPointMake(targetX, 0) animated:NO];
 }
 
 
@@ -357,7 +370,8 @@
         if (aIndex >= ([self.imageArray count])){
             aIndex = [self.imageArray count]-1;
         }
-        [self.scrollView setContentOffset:CGPointMake(ITEM_WIDTH*(aIndex+1), 0) animated:YES];
+        CGPoint point = CGPointMake(ITEM_WIDTH*(aIndex+1), 0);
+        [self.scrollView setContentOffset:point animated:NO];
     }else{
         [self.scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
     }
