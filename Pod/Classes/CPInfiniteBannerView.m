@@ -235,6 +235,7 @@
         make.width.equalTo(self.mas_width);
         make.height.equalTo(self.mas_height);
         make.left.equalTo(position == 0?self.scrollView:lastView.mas_right);
+        make.top.equalTo(self.scrollView);
     }];
     
     
