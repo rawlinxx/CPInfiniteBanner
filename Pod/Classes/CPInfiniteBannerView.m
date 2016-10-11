@@ -15,7 +15,7 @@
 #import <libextobjc/EXTScope.h>
 
 
-#define ITEM_WIDTH                         (self.frame.size.width)
+#define ITEM_WIDTH                         (self.itemWidth + self.spacing)
 #define CP_SafeBlockRun(block, ...)        block ? block(__VA_ARGS__) : nil
 
 
@@ -28,8 +28,6 @@
 @property (nonatomic, weak  ) UIView                        *container;
 
 @end
-
-
 
 @implementation CPInfiniteBannerView
 
@@ -78,6 +76,8 @@
 }
 
 - (void)commonInit {
+    _itemWidth = self.frame.size.width;
+    _spacing = 0.0f;
     [self addSubview:self.scrollView];
     [self addSubview:self.pageControl];
     _enableAutoScroll = YES;
@@ -90,7 +90,7 @@
     [self setImageArray:_imageArray];
 }
 
-#pragma mark - lazy load
+#pragma mark - getter & sertter
 
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
@@ -126,10 +126,20 @@
 #pragma mark - constraints
 
 - (void)makeConstraints {
+    
+    if (self.spacing != 0 && self.itemWidth != self.frame.size.width) {
+        self.scrollView.clipsToBounds = NO;
+    }
+    
     @weakify(self);
     [self.scrollView mas_remakeConstraints:^(MASConstraintMaker *make) {
         @strongify(self);
-        make.size.mas_equalTo(self);
+        if (self.scrollView.clipsToBounds) {
+            make.width.equalTo(self.mas_width);
+        } else {
+            make.width.mas_equalTo(ITEM_WIDTH);
+        }
+        make.height.equalTo(self);
         make.center.mas_equalTo(self);
     }];
     
@@ -150,10 +160,22 @@
 
         make.height.equalTo(@20);
     }];
+    
+
 }
 
 
 #pragma mark - setter
+
+- (void)setItemWidth:(CGFloat)itemWidth {
+    _itemWidth = itemWidth;
+    [self makeConstraints];
+}
+
+- (void)setSpacing:(CGFloat)spacing {
+    _spacing = spacing;
+    [self makeConstraints];
+}
 
 - (void)setPlaceHolder:(UIImage *)placeHolder {
     if (placeHolder) {
@@ -176,9 +198,13 @@
         
         //首尾各加一张图片
         self.pageControl.hidden = YES;
-        self.scrollView.contentSize	 = CGSizeMake(ITEM_WIDTH * (_imageArray.count+2), self.frame.size.height);
+        self.scrollView.contentSize	 = CGSizeMake(ITEM_WIDTH * (_imageArray.count+4), self.frame.size.height);
         
         //set head view
+        if (_imageArray.count > 1) {
+            [self buildSubViewOfScrollViewWithTag:98 andImageData:_imageArray[_imageArray.count-2]];
+        }
+        
         NSInteger tag_head = 99;
         [self buildSubViewOfScrollViewWithTag:tag_head andImageData:[_imageArray lastObject]];
         
@@ -191,6 +217,10 @@
         //set tail view
         NSInteger tag_tail = 100 + [_imageArray count];
         [self buildSubViewOfScrollViewWithTag:tag_tail andImageData:[_imageArray firstObject]];
+        
+        if (_imageArray.count > 1) {
+            [self buildSubViewOfScrollViewWithTag:101+[_imageArray count] andImageData:_imageArray[1]];
+        }
         
         //move to the first item
         [self gotoStartPostionAfterSetData];
@@ -215,10 +245,14 @@
     }
     
     NSInteger position;
-    if (tag == 99) {
+    if (tag == 98) {
+        position = -1;
+    } else if (tag == 99) {
         position = 0;
     }else if (tag == (100 + [_imageArray count])){
         position = [_imageArray count]+1;
+    }else if (tag == (101 + [_imageArray count])){
+        position = [_imageArray count]+2;
     }else{
         position = (tag - 100) + 1;
     }
@@ -232,9 +266,13 @@
     [self.scrollView addSubview:singleItemView];
     
     [singleItemView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(self.mas_width);
+        make.width.mas_equalTo(self.itemWidth);
         make.height.equalTo(self.mas_height);
-        make.left.equalTo(position == 0?self.scrollView:lastView.mas_right);
+        if (position == -1) {
+            make.left.equalTo(self.scrollView);
+        } else {
+            make.left.equalTo(lastView.mas_right).with.offset(self.spacing);
+        }
         make.top.equalTo(self.scrollView);
     }];
     
@@ -333,16 +371,16 @@
     [self stopTimer];
 
     CGFloat targetX = scrollView.contentOffset.x;
-    if ([self.imageArray count] >= 1){
-        if (targetX >= ITEM_WIDTH * ([self.imageArray count] + 1)) {
-            targetX = ITEM_WIDTH;
+    if ([self.imageArray count] > 1){
+        if (targetX >= ITEM_WIDTH * ([self.imageArray count] + 2)) {
+            targetX = ITEM_WIDTH*2;
             [self.scrollView setContentOffset:CGPointMake(targetX, 0) animated:NO];
-        }else if(targetX <= 0){
-            targetX = ITEM_WIDTH *[self.imageArray count];
+        }else if(targetX <= ITEM_WIDTH){
+            targetX = ITEM_WIDTH * [self.imageArray count] + ITEM_WIDTH;
             [self.scrollView setContentOffset:CGPointMake(targetX, 0) animated:NO];
         }
     }
-    NSInteger page = (self.scrollView.contentOffset.x+ITEM_WIDTH/2.0) / ITEM_WIDTH;
+    NSInteger page = (self.scrollView.contentOffset.x+ITEM_WIDTH/2.0) / ITEM_WIDTH - 1;
 
     if ([self.imageArray count] > 1){
         page --;
@@ -367,11 +405,11 @@
 
 
 - (void)scrollToIndex:(NSInteger)aIndex {
-    if ([self.imageArray count]>1){
+    if ([self.imageArray count] > 1){
         if (aIndex >= ([self.imageArray count])){
             aIndex = [self.imageArray count]-1;
         }
-        CGPoint point = CGPointMake(ITEM_WIDTH*(aIndex+1), 0);
+        CGPoint point = CGPointMake(ITEM_WIDTH*(aIndex+2), 0);
         [self.scrollView setContentOffset:point animated:NO];
     }else{
         [self.scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
@@ -379,7 +417,27 @@
     [self scrollViewDidScroll:self.scrollView];
 }
 
-
+#pragma mark - system
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView *view = [super hitTest:point withEvent:event];
+    if (self.scrollView.clipsToBounds == YES) return view;
+    if ([view isEqual:self])
+    {
+        for (UIView *subview in self.scrollView.subviews)
+        {
+            CGPoint offset = CGPointMake(point.x - self.scrollView.frame.origin.x + self.scrollView.contentOffset.x - subview.frame.origin.x,
+                                         point.y - self.scrollView.frame.origin.y + self.scrollView.contentOffset.y - subview.frame.origin.y);
+            
+            if ((view = [subview hitTest:offset withEvent:event]))
+            {
+                return view;
+            }
+        }
+        return self.scrollView;
+    }
+    return view;
+}
 
 #pragma mark - download image
 

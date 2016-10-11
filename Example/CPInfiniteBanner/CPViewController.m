@@ -24,10 +24,13 @@
     
     NSArray *array = @[[NSURL URLWithString:@"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg"],
 //                        [NSURL URLWithString:@"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg"],
-                        [UIImage imageNamed:@"2.jpg"]];
+                        [UIImage imageNamed:@"1.jpg"],[UIImage imageNamed:@"2.jpg"],[UIImage imageNamed:@"3.jpg"]];
     
-    self.banner.placeHolder = [UIImage imageNamed:@"3.jpg"];
+    self.banner.placeHolder = nil;
+//    self.banner.itemWidth = 275;
+//    self.banner.spacing = 5;
     self.banner.enableAutoScroll = YES;
+
     [self.banner setImageArray:[NSMutableArray arrayWithArray:array]];
 
 //    CPInfiniteBannerView *banner = [[CPInfiniteBannerView alloc]initWithContainerView:self.view responseBlock:^(NSString *link, NSUInteger index) {
@@ -40,6 +43,7 @@
 //    banner.pageContolAliment = CPInfiniteBannerPageContolAlimentLeft;
 //    banner.pageControl.currentPageIndicatorTintColor = [UIColor blueColor];
 //    banner.imageArray = [NSMutableArray arrayWithArray:array];
+    
 }
 
 - (void)didReceiveMemoryWarning {

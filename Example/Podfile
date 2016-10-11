@@ -28,6 +28,8 @@ target 'CPInfiniteBanner_Example', :exclusive => true do
   # Add Example specific dependencies here...
 
   pod "CPInfiniteBanner", :path => "../"
+  pod 'Reveal-iOS-SDK', '~> 1.6.1', :configurations => ['Debug']
+
 end
 
 target 'CPInfiniteBanner_Tests', :exclusive => true do

@@ -48,6 +48,11 @@ typedef NS_ENUM(NSUInteger, CPInfiniteBannerPageContolAliment) {
 // image click block
 @property (nonatomic, copy  ) CPInfiniteBannerResponseBlock responseBlock;
 
+// item width
+@property (nonatomic) CGFloat itemWidth;
+
+// spacing between items
+@property (nonatomic) CGFloat spacing;
 /**
  *  init method
  *

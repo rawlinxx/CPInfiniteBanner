@@ -1,8 +1,8 @@
 PODS:
   - CPInfiniteBanner (0.1.0):
-    - libextobjc (~> 0.4.1)
-    - Masonry (~> 0.6.3)
-    - SDWebImage (~> 3.7.2)
+    - libextobjc
+    - Masonry
+    - SDWebImage
   - Kiwi (2.4.0)
   - libextobjc (0.4.1):
     - libextobjc/EXTADT (= 0.4.1)
@@ -39,24 +39,27 @@ PODS:
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
   - libextobjc/UmbrellaHeader (0.4.1)
-  - Masonry (0.6.4)
-  - SDWebImage (3.7.6):
-    - SDWebImage/Core (= 3.7.6)
-  - SDWebImage/Core (3.7.6)
+  - Masonry (1.0.2)
+  - Reveal-iOS-SDK (1.6.2)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
 
 DEPENDENCIES:
   - CPInfiniteBanner (from `../`)
   - Kiwi
+  - Reveal-iOS-SDK (~> 1.6.1)
 
 EXTERNAL SOURCES:
   CPInfiniteBanner:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CPInfiniteBanner: 0f07cd87dac06d0e9f2338361252b35618148975
+  CPInfiniteBanner: cc4ab2b593fd54fd61d854d0760f4bee3753e40c
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
-  Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
-  SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
+  Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
+  Reveal-iOS-SDK: e2250b3c155bcfac53ae223ddc1f76d08f206c33
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
 
 COCOAPODS: 0.39.0
