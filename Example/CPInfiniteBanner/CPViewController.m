@@ -27,8 +27,8 @@
                         [UIImage imageNamed:@"1.jpg"],[UIImage imageNamed:@"2.jpg"],[UIImage imageNamed:@"3.jpg"]];
     
     self.banner.placeHolder = nil;
-//    self.banner.itemWidth = 275;
-//    self.banner.spacing = 5;
+//    self.banner.itemWidth = 375;
+//    self.banner.spacing = 0;
     self.banner.enableAutoScroll = YES;
 
     [self.banner setImageArray:[NSMutableArray arrayWithArray:array]];

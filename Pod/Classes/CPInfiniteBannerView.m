@@ -76,7 +76,7 @@
 }
 
 - (void)commonInit {
-    _itemWidth = self.frame.size.width;
+    _itemWidth = [UIScreen mainScreen].bounds.size.width;
     _spacing = 0.0f;
     [self addSubview:self.scrollView];
     [self addSubview:self.pageControl];
@@ -267,6 +267,7 @@
     
     [singleItemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(self.itemWidth);
+
         make.height.equalTo(self.mas_height);
         if (position == -1) {
             make.left.equalTo(self.scrollView);
@@ -380,7 +381,7 @@
             [self.scrollView setContentOffset:CGPointMake(targetX, 0) animated:NO];
         }
     }
-    NSInteger page = (self.scrollView.contentOffset.x+ITEM_WIDTH/2.0) / ITEM_WIDTH - 1;
+    NSInteger page = (self.scrollView.contentOffset.x+ITEM_WIDTH/2.0) / ITEM_WIDTH;
 
     if ([self.imageArray count] > 1){
         page --;
