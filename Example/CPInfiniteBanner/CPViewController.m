@@ -27,11 +27,16 @@
                         [UIImage imageNamed:@"1.jpg"],[UIImage imageNamed:@"2.jpg"],[UIImage imageNamed:@"3.jpg"]];
     
     self.banner.placeHolder = nil;
-//    self.banner.itemWidth = 375;
-//    self.banner.spacing = 0;
-    self.banner.enableAutoScroll = YES;
+    self.banner.itemWidth = 250;
+    self.banner.spacing = 5;
+    self.banner.enableAutoScroll = NO;
+    
+    self.banner.responseBlock = ^(NSString *link, NSUInteger index, UIImageView *imageView) {
+        NSLog(@"the index of the image you pressed is %@",@(index));
+    };
 
     [self.banner setImageArray:[NSMutableArray arrayWithArray:array]];
+
 
 //    CPInfiniteBannerView *banner = [[CPInfiniteBannerView alloc]initWithContainerView:self.view responseBlock:^(NSString *link, NSUInteger index) {
 //        NSLog(@"the link of the image you pressed is %@",link);

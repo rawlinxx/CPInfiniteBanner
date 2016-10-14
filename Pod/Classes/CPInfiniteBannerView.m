@@ -314,26 +314,33 @@
 
 - (void)clickOnScrollView:(UITapGestureRecognizer *)gesture {
     CGPoint point = [gesture locationInView:self.scrollView];
-    NSInteger page = (NSInteger)point.x / (NSInteger)self.frame.size.width;
+    NSInteger page = (NSInteger)point.x / (NSInteger)ITEM_WIDTH;
 
     CPInfiniteBannerSingleItem *itemView;
     NSInteger currentTag;
-    if (page == 0) {//head
-        currentTag = 99;
+    if (page <= 1) {//head
+        currentTag = 98+page;
     }else if (page == [self.imageArray count]+1){//tail
         currentTag = (100 + [_imageArray count]);
+    }else if (page == [self.imageArray count]+2) {//tail
+        currentTag = (101 + [_imageArray count]);
     }else{//center
         currentTag = (page-1+100);
     }
-             
+    
     if ([self.scrollView viewWithTag:currentTag] &&
         [[self.scrollView viewWithTag:currentTag]isKindOfClass:[CPInfiniteBannerSingleItem class]]) {
         itemView = (CPInfiniteBannerSingleItem *)[self.scrollView viewWithTag:currentTag];
         
         if (_responseBlock) {
-            if (itemView.link && [itemView.link length]) {
-                CP_SafeBlockRun(_responseBlock,itemView.link,page,itemView.imageView);
+            page = page - 2;
+            if (page < 0) {
+                page = self.imageArray.count - 1;
             }
+            if (page >= self.imageArray.count) {
+                page = 0;
+            }
+            CP_SafeBlockRun(_responseBlock,itemView.link,page,itemView.imageView);
         }
     }
 }
